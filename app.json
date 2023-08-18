@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "reactNative-01-weather",
-    "slug": "reactNative-01-weather",
+    "slug": "reactnative-01-weather",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "71e88e79-dc83-4d28-b9e9-b682e0e66c97"
+      }
+    },
+    "owner": "aristataetc"
   }
 }
