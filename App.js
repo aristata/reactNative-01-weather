@@ -1,19 +1,49 @@
-import { View } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { View, StyleSheet, Text } from "react-native";
 
 export default function App() {
   return (
-    <View style={{ flex: 1, flexDirection: "row" }}>
-      <View style={{ flex: 1, backgroundColor: "tomato" }}></View>
-      <View style={{ flex: 1, backgroundColor: "teal" }}></View>
-      <View style={{ flex: 1, backgroundColor: "orange" }}></View>
+    <View style={styles.container}>
+      <StatusBar style="light" />
+      <View style={styles.city}>
+        <Text style={styles.cityName}>Busan</Text>
+      </View>
+      <View style={styles.weather}>
+        <View style={styles.day}>
+          <Text style={styles.temp}>31℃</Text>
+          <Text style={styles.description}>맑음</Text>
+        </View>
+      </View>
     </View>
   );
 }
 
-/***************************************************************************************************
- * 2.4 layout system
- *
- * - Flexbox 는 다양한 스크린 크기에서 일관된 레이아웃을 제공하도록 설계되었다
- * - View 컴포넌트는 기본적으로 Flexbox 이다
- * - 따로 container 를 지정하지 않아도, 상위 컴포넌트는 container 역할을 수행한다
- ***************************************************************************************************/
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "yellow"
+  },
+  city: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  cityName: {
+    fontSize: 80,
+    fontWeight: "bold"
+  },
+  weather: {
+    flex: 2
+  },
+  day: {
+    flex: 1,
+    alignItems: "center"
+  },
+  temp: {
+    marginTop: 10,
+    fontSize: 120
+  },
+  description: {
+    fontSize: 60
+  }
+});
