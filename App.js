@@ -2,16 +2,17 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { View, StyleSheet, Text, ScrollView, Dimensions } from "react-native";
 import * as Location from "expo-location";
+import { OPEN_WEATHER_API_KEY } from "@env";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function App() {
   const [city, setCity] = useState("Loading...");
-  const [location, setLocation] = useState();
+  const [days, setDays] = useState([]);
   const [ok, setOk] = useState(true);
-  const ask = async () => {
+  const getWeather = async () => {
     const permission = await Location.requestForegroundPermissionsAsync();
-    // console.log(permission);
+    console.log(permission);
     if (!permission.granted) {
       setOk(false);
     }
@@ -22,11 +23,22 @@ export default function App() {
       { latitude, longitude },
       { useGoogleMaps: false }
     );
-    // console.log(location);
+    console.log(location);
     setCity(location[0].city);
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${OPEN_WEATHER_API_KEY}&units=metric`
+    );
+    const json = await response.json();
+    const dayWeathers = json.list.filter((weather) => {
+      if (weather.dt_txt.includes("00:00:00")) {
+        return weather;
+      }
+    });
+    console.log(dayWeathers);
+    setDays(dayWeathers);
   };
   useEffect(() => {
-    ask();
+    getWeather();
   }, []);
   return (
     <View style={styles.container}>
@@ -40,26 +52,15 @@ export default function App() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.weather}
       >
-        <View style={styles.day}>
-          <Text style={styles.temp}>31℃</Text>
-          <Text style={styles.description}>맑음</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temp}>31℃</Text>
-          <Text style={styles.description}>맑음</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temp}>31℃</Text>
-          <Text style={styles.description}>맑음</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temp}>31℃</Text>
-          <Text style={styles.description}>맑음</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temp}>31℃</Text>
-          <Text style={styles.description}>맑음</Text>
-        </View>
+        {days.map((day) => (
+          <View style={styles.day} key={day.dt}>
+            <Text style={styles.temp}>
+              {parseFloat(day.main.temp).toFixed(1)}
+            </Text>
+            <Text style={styles.description}>{day.weather[0].main}</Text>
+            <Text style={styles.tinyText}>{day.weather[0].description}</Text>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );
